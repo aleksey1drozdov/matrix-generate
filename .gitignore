@@ -1,4 +1,6 @@
-cmake-build-debug/
-buid/
-maps/
+/.idea/
+/cmake-build-debug/
+/buid/
+/maps/
+/build/
 ham_chains_v1.pdf

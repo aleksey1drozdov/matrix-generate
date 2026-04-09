@@ -17,13 +17,12 @@ struct SymmetryInfo {
 class SymmetryManager {
 public:
     static bool isInSearchZone(Point p, int N) {
-        // Условие 1/8: 0 <= x <= floor((N-1)/2) и x <= y <= floor((N-1)/2)
-        // Но так как у нас x,y от 0 до N-1, и мы хотим покрыть всё:
-        // x <= y (нижний треугольник относительно диагонали T)
-        // y <= (N-1)/2 (верхняя половина сетки)
-        // x <= (N-1)/2 (левая половина сетки)
-        int mid = (N - 1) / 2;
-        return (p.x >= 0 && p.x <= mid && p.y >= p.x && p.y <= mid);
+        if (N % 2 == 0) {
+            N = N+1;
+        }
+
+        return p.x >= 0 && p.x <= N/2
+            && p.y >= 0 && p.y <= N/2;
     }
 
     static SymmetryInfo getSymmetryInfo(Point p, int N) {

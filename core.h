@@ -32,7 +32,6 @@ struct Path {
             ss << points[i].x << "," << points[i].y;
             if (i < points.size() - 1) ss << ",";
         }
-        ss << ";" << countTurns();
         return ss.str();
     }
 
@@ -51,7 +50,6 @@ struct Path {
             ss << p;
             if (i < points.size() - 1) ss << ",";
         }
-        ss << ";" << countTurns();
         return ss.str();
     }
 
@@ -76,34 +74,37 @@ public:
     Grid(int n) : N(n), mask(0) {}
 
     void setVisited(int x, int y) {
-        mask |= (1ULL << (y * N + x));
+        mask |= ((unsigned __int128)1 << (y * N + x));
     }
 
     bool isVisited(int x, int y) const {
-        return (mask & (1ULL << (y * N + x))) != 0;
+        return (mask & ((unsigned __int128)1 << (y * N + x))) != 0;
     }
 
     void clearVisited(int x, int y) {
-        mask &= ~(1ULL << (y * N + x));
+        mask &= ~((unsigned __int128)1 << (y * N + x));
     }
 
     bool allVisited() const {
-        if (N * N >= 64) return mask == ~0ULL;
-        return mask == ((1ULL << (N * N)) - 1);
+        if (N * N >= 128) return mask == ~(unsigned __int128)0;
+        return mask == (((unsigned __int128)1 << (N * N)) - 1);
     }
 
     int countVisited() const {
-        return __builtin_popcountll(mask);
+        return popcount128(mask);
     }
 
     int getN() const { return N; }
 
-    uint64_t getMask() const { return mask; }
-    void setMask(uint64_t m) { mask = m; }
-
 private:
     int N;
-    uint64_t mask; // Поддерживает до 8x8. Для больших N потребуется __int128 или массив.
+    unsigned __int128 mask; // Поддерживает до 11x11 (121 клетки)
+
+    static int popcount128(unsigned __int128 v) {
+        uint64_t lo = (uint64_t)v;
+        uint64_t hi = (uint64_t)(v >> 64);
+        return __builtin_popcountll(lo) + __builtin_popcountll(hi);
+    }
 };
 
 #endif // CORE_H

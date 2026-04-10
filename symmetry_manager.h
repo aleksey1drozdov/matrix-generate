@@ -17,8 +17,11 @@ struct SymmetryInfo {
 class SymmetryManager {
 public:
     static bool isInSearchZone(Point p, int N) {
-        if (N % 2 == 0) {
-            N = N+1;
+        if (N % 2 == 1) {
+            N = N + 1;
+        } else
+        {
+            N = N - 1;
         }
 
         return p.x >= 0 && p.x <= N/2
